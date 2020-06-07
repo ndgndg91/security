@@ -28,11 +28,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.rememberMe().key("ndgndg91-/V`&fKLh]Hp+8/_6-Z4a)Prg:M%:").tokenValiditySeconds(-1)
+                .and().authorizeRequests()
 //                .antMatchers("/resource/**").permitAll()
                 .antMatchers("/join/form").permitAll()
                 .antMatchers("/").hasAnyRole(USER.name(), ADMIN.name())
-                .antMatchers("/admin/*").hasRole(ADMIN.name())
+                .antMatchers("/admin/*").access("hasRole('ADMIN') and isFullyAuthenticated()")
                 .and().formLogin()
                         .loginPage("/login/form")
                         .loginProcessingUrl("/login")
@@ -40,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .usernameParameter("username")
                         .passwordParameter("password")
                 .and().httpBasic()
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login/form?logout")
+                .and().logout().deleteCookies("JSESSIONID").logoutUrl("/logout").logoutSuccessUrl("/login/form?logout")
                 .and().csrf().disable();
     }
 
