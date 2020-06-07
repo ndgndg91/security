@@ -1,6 +1,7 @@
 package com.ndgndg91.todo.configuration;
 
 import com.ndgndg91.todo.component.TodoUserDetailsService;
+import com.ndgndg91.todo.component.PersistentRememberMeTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TodoUserDetailsService todoUserDetailsService;
 
+    private final PersistentRememberMeTokenRepository persistentRememberMeTokenRepository;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(todoUserDetailsService).passwordEncoder(this.bCryptPasswordEncoder());
@@ -28,7 +31,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.rememberMe().key("ndgndg91-/V`&fKLh]Hp+8/_6-Z4a)Prg:M%:").tokenValiditySeconds(-1)
+        http.rememberMe()
+                .key("ndgndg91-/V`&fKLh]Hp+8/_6-Z4a)Prg:M%:")
+                .tokenValiditySeconds(3600)
+                .tokenRepository(persistentRememberMeTokenRepository)
                 .and().authorizeRequests()
 //                .antMatchers("/resource/**").permitAll()
                 .antMatchers("/join/form").permitAll()
