@@ -7,6 +7,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentReme
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -23,9 +25,11 @@ public class PersistentRememberMeTokenRepository implements PersistentTokenRepos
     @Override
     @Transactional
     public void createNewToken(PersistentRememberMeToken token) {
+        String series = seriesAppendIp(token.getSeries());
+
         RememberMeToken rememberMeToken = RememberMeToken.builder()
                 .username(token.getUsername())
-                .series(token.getSeries())
+                .series(series)
                 .token(token.getTokenValue())
                 .lastUsed(token.getDate())
                 .build();
@@ -35,6 +39,7 @@ public class PersistentRememberMeTokenRepository implements PersistentTokenRepos
     @Override
     @Transactional
     public void updateToken(String series, String tokenValue, Date lastUsed) {
+        series = seriesAppendIp(series);
         RememberMeToken rememberMeToken = null;
         try {
              rememberMeToken = em.createQuery("SELECT rmt FROM RememberMeToken rmt WHERE rmt.series = :series", RememberMeToken.class)
@@ -54,6 +59,7 @@ public class PersistentRememberMeTokenRepository implements PersistentTokenRepos
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
+        seriesId = seriesAppendIp(seriesId);
         RememberMeToken rememberMeToken = em.createQuery("SELECT rmt FROM RememberMeToken rmt WHERE rmt.series = :series", RememberMeToken.class)
                 .setParameter("series", seriesId)
                 .getSingleResult();
@@ -72,5 +78,15 @@ public class PersistentRememberMeTokenRepository implements PersistentTokenRepos
         em.createQuery("DELETE FROM RememberMeToken rmt WHERE rmt.username =:username")
                 .setParameter("username", username)
                 .executeUpdate();
+    }
+
+    private String seriesAppendIp(String series) {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String ip = "";
+        if (Objects.nonNull(requestAttributes)) {
+            ip = requestAttributes.getRequest().getRemoteAddr();
+        }
+
+        return series + ip;
     }
 }
