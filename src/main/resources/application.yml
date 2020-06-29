@@ -8,9 +8,9 @@ spring:
     mode: HTML5
 
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/test?useSSL=false&serverTimezone=UTC
+    url: jdbc:mariadb://todo-mariadb.cs4i16kyfber.ap-northeast-2.rds.amazonaws.com:3306/test?useSSL=false&serverTimezone=UTC
     driver-class-name: org.mariadb.jdbc.Driver
-    username: root
+    username:
     password:
     dbcp2:
       validation-query: SELECT 1
