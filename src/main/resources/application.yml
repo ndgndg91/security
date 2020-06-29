@@ -1,3 +1,6 @@
+server:
+  port: 5000 #aws Elastic Beanstalk deploy
+
 spring:
   ## Thymeleaf configuration:
   thymeleaf:
