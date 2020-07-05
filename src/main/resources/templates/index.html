@@ -10,6 +10,40 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 </div>
+<div class="container">
+    <div class="row">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>상세</th>
+            <th>기한</th>
+            <th>생성 일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>test</td>
+            <td>test test test</td>
+            <td>2020-12-31</td>
+            <td>2020-05-01</td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
 <!--/*/ <th:block th:include="fragments/footer :: foot"></th:block> /*/-->
+<script>
+    window.onload = function () {
+        let currUserId = document.querySelector("#current-login-user-id").innerText;
+        console.log(currUserId);
+        $.get("/item/"+ currUserId, function (res) {
+            console.log(res);
+        });
+    }
+</script>
 </body>
 </html>

@@ -8,6 +8,7 @@
             <a sec:authentication="name"></a>
             <a th:href="@{/logout}">Logout</a>
         </div>
+        <div id="current-login-user-id" style="display: none" sec:authentication="principal.id"></div>
     </div>
 </div>
 </body>

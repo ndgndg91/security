@@ -1,6 +1,7 @@
 package com.ndgndg91.todo.item.model;
 
 
+import com.ndgndg91.todo.user.model.User;
 import lombok.*;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,6 +29,8 @@ public class Item {
 
     private LocalDateTime due;
     private LocalDateTime createdTime;
+
+    private long userId;
 
     @Override
     public String toString() {
